@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Votics 2024</title>
+</head>
+
+<body>
+  <div class="main">
+    <img class="header" src="./website_header.png">
+
+    <div class="container">
+      <div class="inside-container">
+        <h6>Provide Name, Constituency or EPIC ID</h6>
+        <input type="text" id="name" placeholder="Enter Your Name">
+        <select id="area" name="nagpur_area">
+          <option value="" disabled selected>Select Constituency</option>
+          <option value="Nagpur South West">Nagpur South West</option>
+          <option value="Nagpur South">Nagpur South</option>
+          <option value="Nagpur East">Nagpur East</option>
+          <option value="Nagpur Central">Nagpur Central</option>
+          <option value="Nagpur West">Nagpur West</option>
+          <option value="Nagpur North">Nagpur North (SC)</option>
+        </select>
+        <img class="or" src="./or.png">
+        <input id="epicid" type="text" placeholder="enter epicid">
+
+        <button id="submit-btn">SUBMIT</button>
+        <div id="error-div"></div>
+      </div>
+    </div>
+
+    <img class="footer" src="./website_footer.png">
+    <script src="bjp.js"></script>
+  </div>
+</body>
+
+</html>

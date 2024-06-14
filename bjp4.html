@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style3.css">
+  <title>Votics 2024</title>
+</head>
+
+<body>
+  <div class="main">
+    <img class="header" src="./website_header.png">
+
+    <div class="container">
+      <span class="backButton"><a href="./bjp.html"><button class="backButtonReal">Back</button></a></span>
+      <div class="inside-container">
+        <div class="contentBox">
+          <div><span class="firstDetails">Name:</span><span class="details" id="voter-name"></span></div>
+          <div><span class="firstDetails">Age:</span><span class="details" id="voter-age"></span></div>
+          <div><span class="firstDetails">Gender:</span><span class="details" id="voter-gender"></span></div>
+          <div><span class="firstDetails">EPIC ID:</span><span class="details" id="voter-epicid"></span></div>
+          <div><span class="firstDetails">Section & Part:</span><span class="details" id="voter-sp"></span></div>
+          <div><span class="firstDetails">Polling Station:</span><span class="details" id="voter-ps"></span></div>
+          <div><span class="firstDetails">Constituency Name & No.: </span><span class="details" id="voter-cn"></span></div>
+        </div>
+        <div class="endButtons">
+          <a class="buttonDirection" href="#" id="viewPollingStation"><button>View Polling Station</button></a>
+          <button id="copy-btn">Copy to Clipboard</button>
+        </div>
+      </div>
+    </div>
+
+    <img class="footer" src="./website_footer.png">
+  </div>
+  <script>
+    function openGoogleMaps(latitude, longitude) {
+      // Construct the Google Maps URL
+      var mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+      // Open Google Maps in a new tab
+      window.open(mapsUrl, '_blank');
+    }
+
+    // Function to extract EPIC ID from the URL query parameter
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    window.onload = function () {
+      // Get the EPIC ID from the URL query parameter
+      var epicid = getParameterByName('epicid');
+
+      if (epicid) {
+        // Make a request to the server to fetch voter information based on the EPIC ID
+        fetch(`http://137.59.53.68:9001/elections2024admin/data/epicid/${epicid}`)
+          .then(response => response.json())
+          .then(data => {
+            // Update the content of the page with the fetched voter information
+            var voterInfo = data[0].properties;
+            document.getElementById('voter-name').innerText += ' ' + voterInfo.voter_marathi_name + ' (' + voterInfo.voter_eng_name + ')';
+            document.getElementById('voter-age').innerText += ' ' + voterInfo.voter_age;
+            document.getElementById('voter-gender').innerText += ' ' + voterInfo.voter_gender;
+            document.getElementById('voter-epicid').innerText += ' ' + voterInfo.epicid;
+            document.getElementById('voter-sp').innerText += ' ' + voterInfo.section_eng + ', Part No. ' + voterInfo.part_no;
+            document.getElementById('voter-ps').innerText += ' ' + voterInfo.booth_eng_name + ' ( ' + voterInfo.booth_marathi_name + ' )';
+            document.getElementById('voter-cn').innerText += ' ' + voterInfo.constituency_name + ', No. ' + voterInfo.constituency_no;
+
+            // Add event listener to View Polling Station button
+            document.getElementById('viewPollingStation').addEventListener('click', function (event) {
+              event.preventDefault();
+              // Open Google Maps with the specified latitude and longitude
+              openGoogleMaps(voterInfo.latitude, voterInfo.longitude);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching voter information:', error);
+          });
+      } else {
+        console.error('EPIC ID not found in the URL query parameter.');
+      }
+    };
+
+    // Function to copy the current page URL to the clipboard
+    document.getElementById('copy-btn').addEventListener('click', function () {
+      var url = window.location.href;
+      navigator.clipboard.writeText(url)
+        .then(function () {
+          console.log('URL copied to clipboard:', url);
+          alert('URL copied to clipboard!');
+        })
+        .catch(function (error) {
+          console.error('Failed to copy URL to clipboard:', error);
+          alert('Failed to copy URL to clipboard');
+        });
+    });
+  </script>
+</body>
+
+</html>

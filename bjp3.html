@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style3.css">
+  <title>Votics 2024</title>
+</head>
+
+<body>
+  <div class="main">
+    <img class="header"
+      src="./website_header.png">
+
+    <div class="container">
+      <span class="backButton"><a
+          href="./bjp2.html"><button
+            class="backButtonReal">Back</button></a></span>
+      <div class="inside-container">
+        <div class="contentBox">
+          <div><span class="firstDetails">Name:</span><span class="details" id="voter-name"></span></div>
+          <div><span class="firstDetails">Age: </span><span class="details" id="voter-age"></span></div>
+          <div><span class="firstDetails">Gender:</span><span class="details" id="voter-gender"></span></div>
+          <div><span class="firstDetails">EPIC ID:</span><span class="details" id="voter-epicid"></span></div>
+          <div><span class="firstDetails">Section & Part:</span><span class="details" id="voter-sp"></span></div>
+          <div><span class="firstDetails">Polling Station:</span><span class="details" id="voter-ps"></span></div>
+          <div><span class="firstDetails">Constituency Name & No.: </span><span class="details" id="voter-cn"></span></div>
+        </div>
+        <div class="endButtons">
+          <a class="buttonDirection" href="#"
+            id="viewPollingStation"><button>View
+              Polling Station</button></a>
+          <button id="copy-btn">Copy Link</button>
+        </div>
+      </div>
+    </div>
+
+    <img class="footer"
+      src="./website_footer.png">
+  </div>
+
+  <script>
+
+    function openGoogleMaps(latitude, longitude) {
+      // Construct the Google Maps URL
+      var mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+      // Open Google Maps in a new tab
+      window.open(mapsUrl, '_blank');
+    }
+
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Retrieve EPIC ID from URL query parameter
+    var epicId = getUrlParameter('epicid');
+
+    // Retrieve voter information from local storage
+    var voterInfo = JSON.parse(localStorage.getItem(epicId));
+
+    // Populate HTML elements with voter information
+    document.getElementById('voter-name').innerText += ' ' + voterInfo.voter_marathi_name+ ' (' +voterInfo.voter_eng_name + ')';
+    document.getElementById('voter-age').innerText += ' ' + voterInfo.voter_age;
+    document.getElementById('voter-gender').innerText += ' ' + voterInfo.voter_gender;
+    document.getElementById('voter-epicid').innerText += ' ' + voterInfo.epicid;
+    document.getElementById('voter-sp').innerText += ' ' + voterInfo.section_eng + ', Part No. ' + voterInfo.part_no;
+    document.getElementById('voter-ps').innerText += ' ' + voterInfo.booth_eng_name + ' ( ' + voterInfo.booth_marathi_name + ' )';
+    document.getElementById('voter-cn').innerText += ' ' + voterInfo.constituency_name + ', No. ' + voterInfo.constituency_no;
+
+    // Add event listener to View Polling Station button
+  document.getElementById('viewPollingStation').addEventListener('click', function (event) {
+    event.preventDefault();
+    // Open Google Maps with the specified latitude and longitude
+    openGoogleMaps(voterInfo.latitude, voterInfo.longitude);
+  });
+
+    // Add event listener to Copy Link button (if needed)
+    document.getElementById('copy-btn').addEventListener('click', function () {
+      var url = window.location.href;
+      navigator.clipboard.writeText(url)
+        .then(function () {
+          console.log('URL copied to clipboard:', url);
+          alert('URL copied to clipboard!');
+        })
+        .catch(function (error) {
+          console.error('Failed to copy URL to clipboard:', error);
+          alert('Failed to copy URL to clipboard');
+        });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style2.css">
+  <title>Votics 2024</title>
+</head>
+
+<body>
+  <div class="main">
+    <img class="header"
+      src="./website_header.png">
+
+    <div class="container">
+      <span class="backButton"><a
+          href="./bjp.html"><button
+            class="backButtonReal">Back</button></a></span>
+      <div class="inside-container">
+        <div class="contentBox">
+          <ol id="myList" class="contentLine">
+      
+          </ol>
+        </div>
+      </div>
+    </div>
+    <script>
+      var recordsArray = JSON.parse(localStorage.getItem("records"));
+      var namesArray = [];
+      var namesMap = new Map();
+      recordsArray.forEach(function (record) {
+        var properties = record.properties;
+        namesArray.push(properties.voter_eng_name);
+        namesMap.set(properties.voter_eng_name, properties);
+      });
+      namesArray = namesArray.sort();
+      namesArray.forEach(function (name) {
+        var myListOL = document.getElementById("myList");
+
+        //remember this voter object       
+        var properties = namesMap.get(name);
+
+
+        var listElement = document.createElement("li");
+
+        var myLink = document.createElement("a");
+        myLink.innerHTML = properties.voter_eng_name;
+        myLink.href = "bjp3.html?epicid=" + properties.epicid;
+        listElement.appendChild(myLink);
+
+        localStorage.setItem(properties.epicid, JSON.stringify(properties));
+        myListOL.appendChild(listElement);
+       
+        /* var voterLinkTag = domConstruct.create("a", {
+          target: "_blank",
+          style: "padding:10px;",
+          href:
+            window.location.origin +
+            "/elections2024/voterinfo.html?epicid=" +
+            properties.epicid,
+          innerHTML:
+            properties.voter_eng_name +
+            " (" +
+            properties.voter_marathi_name +
+            ")",
+        });*/
+
+        //voterCPResult += voterLinkTag.outerHTML + "<br>";
+      });
+    </script>
+
+
+
+
+    <img class="footer"
+      src="./website_footer.png">
+  </div>
+</body>
+
+</html>
